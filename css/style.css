@@ -1,7 +1,6 @@
 body {
   box-sizing: border-box;
-  background: transparent;
-}
+  background: transparent; }
 
 .cards {
   margin: 0;
@@ -9,22 +8,15 @@ body {
   list-style-type: none;
   width: 300px;
   margin: 0 auto;
-  position: relative;
-
-  .card {
+  position: relative; }
+  .cards .card {
     position: absolute;
     background: yellow;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 10;
-
-    img {
-      width: 20px;
-    }
-
-    &:nth-child(odd) {
-      background: red;
-    }
-  }
-}
+    z-index: 10; }
+    .cards .card img {
+      width: 20px; }
+    .cards .card:nth-child(odd) {
+      background: red; }

@@ -12,9 +12,10 @@ class Error extends React.Component {
 class User extends React.Component {
   get userItem() {
     const {
-      user
+      user,
+      itemNo
     } = this.props;
-    return React.createElement("li", null, React.createElement("img", {
+    return React.createElement("div", null, React.createElement("img", {
       src: user.avatar_url,
       alt: `${user.login}'s profile picture`
     }), React.createElement("h2", null, user.login), React.createElement("a", {
@@ -30,7 +31,8 @@ class User extends React.Component {
 }
 
 _defineProperty(User, "propType", {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  itemNo: PropTypes.number.isRequired
 });
 
 _defineProperty(User, "defaultProps", {
@@ -38,14 +40,47 @@ _defineProperty(User, "defaultProps", {
 });
 
 class Users extends React.Component {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "mouseMove", (num, e) => {
+      const element = document.querySelectorAll(`.card-${num}`); // console.log(e.target);
+      // console.log(window.innerWidth / 2 - e.clientX);
+
+      const t1 = new TimelineMax();
+      t1.to(element, 1, {
+        y: -20
+      });
+    });
+
+    _defineProperty(this, "mouseLeave", (num, e) => {
+      const element = document.querySelectorAll(`.card-${num}`);
+      const t1 = new TimelineMax();
+      t1.to(element, 1, {
+        y: 0
+      });
+    });
+  }
+
   get usersList() {
     const {
       users
     } = this.props;
-    return users.map((user, i) => React.createElement("div", {
-      key: i
+    return users.map((user, i) => React.createElement("li", {
+      className: `card card-${i}`,
+      key: i,
+      style: {
+        top: `${i * 200}px`
+      },
+      onMouseMove: e => {
+        this.mouseMove(i, e);
+      },
+      onMouseLeave: e => {
+        this.mouseLeave(i, e);
+      }
     }, React.createElement(User, {
-      user: user
+      user: user,
+      itemNo: i
     })));
   }
 
@@ -54,7 +89,9 @@ class Users extends React.Component {
       notFound
     } = this.props;
     if (notFound) return React.createElement("h2", null, "not found");
-    return React.createElement("div", null, this.usersList);
+    return React.createElement("ul", {
+      className: "cards"
+    }, this.usersList);
   }
 
 }
@@ -99,7 +136,7 @@ class App extends React.Component {
     });
 
     _defineProperty(this, "fetchUsers", async name => {
-      const url = `ahttps://api.github.com/search/users?q=${name}`;
+      const url = `https://api.github.com/search/users?q=${name}`;
       this.setState({
         notFound: false,
         loading: true,
@@ -130,7 +167,7 @@ class App extends React.Component {
     });
 
     this.state = {
-      name: '',
+      name: 'dev',
       loading: false,
       fetchResults: null,
       fetchedUsers: [],
@@ -154,6 +191,7 @@ class App extends React.Component {
       type: "text",
       name: "name",
       placeholder: "Type in the GitHub user name",
+      value: this.state.name,
       autoComplete: "off",
       onChange: this.handleInput
     }), inputAlert && React.createElement("small", null, "Type in at least 2 characters or more"), !notFound && !error && !loading && fetchedUsers.length === 0 && React.createElement("p", null, "Type in the name and hit enter")), loading && 'Loading', error && React.createElement(Error, null), !error && !loading && React.createElement(Users, {

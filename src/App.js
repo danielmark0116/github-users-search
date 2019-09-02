@@ -6,7 +6,8 @@ class Error extends React.Component {
 
 class User extends React.Component {
   static propType = {
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    itemNo: PropTypes.number.isRequired
   };
 
   static defaultProps = {
@@ -14,15 +15,15 @@ class User extends React.Component {
   };
 
   get userItem() {
-    const { user } = this.props;
+    const { user, itemNo } = this.props;
     return (
-      <li>
+      <div>
         <img src={user.avatar_url} alt={`${user.login}'s profile picture`} />
         <h2>{user.login}</h2>
         <a href={user.url} target="_blank">
           See {user.login}'s profile on GitHub
         </a>
-      </li>
+      </div>
     );
   }
 
@@ -42,19 +43,45 @@ class Users extends React.Component {
     notFound: false
   };
 
+  mouseMove = (num, e) => {
+    const element = document.querySelectorAll(`.card-${num}`);
+    // console.log(e.target);
+    // console.log(window.innerWidth / 2 - e.clientX);
+    const t1 = new TimelineMax();
+
+    t1.to(element, 1, { y: -20 });
+  };
+
+  mouseLeave = (num, e) => {
+    const element = document.querySelectorAll(`.card-${num}`);
+    const t1 = new TimelineMax();
+
+    t1.to(element, 1, { y: 0 });
+  };
+
   get usersList() {
     const { users } = this.props;
     return users.map((user, i) => (
-      <div key={i}>
-        <User user={user}></User>
-      </div>
+      <li
+        className={`card card-${i}`}
+        key={i}
+        style={{ top: `${i * 200}px` }}
+        onMouseMove={e => {
+          this.mouseMove(i, e);
+        }}
+        onMouseLeave={e => {
+          this.mouseLeave(i, e);
+        }}
+      >
+        <User user={user} itemNo={i}></User>
+      </li>
     ));
   }
 
   render() {
     const { notFound } = this.props;
     if (notFound) return <h2>not found</h2>;
-    return <div>{this.usersList}</div>;
+    return <ul className="cards">{this.usersList}</ul>;
   }
 }
 
@@ -62,7 +89,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: '',
+      name: 'dev',
       loading: false,
       fetchResults: null,
       fetchedUsers: [],
@@ -95,7 +122,7 @@ class App extends React.Component {
   };
 
   fetchUsers = async name => {
-    const url = `ahttps://api.github.com/search/users?q=${name}`;
+    const url = `https://api.github.com/search/users?q=${name}`;
 
     this.setState({
       notFound: false,
@@ -141,6 +168,7 @@ class App extends React.Component {
             type="text"
             name="name"
             placeholder="Type in the GitHub user name"
+            value={this.state.name}
             autoComplete="off"
             onChange={this.handleInput}
           />
