@@ -1,0 +1,36 @@
+{
+  "name": "github-users-search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "node-sass -w -r styles/style.scss -o css",
+    "server": "browser-sync start --server --files *",
+    "babel": "babel src/App.js --watch --out-file build.js",
+    "dev": "concurrently \"npm run sass\" \"npm run server\" \"npm run babel\""
+  },
+  "browserslist": "> 0.25%, not dead",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielmark0116/github-users-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielmark0116/github-users-search/issues"
+  },
+  "homepage": "https://github.com/danielmark0116/github-users-search#readme",
+  "dependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "concurrently": "^4.1.2",
+    "node-sass": "^4.12.0"
+  }
+}
