@@ -2,6 +2,15 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+class Loading extends React.Component {
+  render() {
+    return React.createElement("section", {
+      className: "loader"
+    }, React.createElement("p", null, "Loading..."));
+  }
+
+}
+
 class Header extends React.Component {
   render() {
     return React.createElement("section", null, React.createElement("div", {
@@ -86,13 +95,30 @@ class User extends React.Component {
       user,
       itemNo
     } = this.props;
-    return React.createElement("div", null, React.createElement("img", {
+    return React.createElement("div", {
+      className: "card-content"
+    }, React.createElement("div", {
+      className: "ico"
+    }, React.createElement("img", {
+      src: itemNo % 2 === 0 ? 'assets/person-blue.svg' : 'assets/person-white.svg',
+      alt: ""
+    })), React.createElement("div", {
+      className: "name"
+    }, React.createElement("p", null, user.login)), React.createElement("div", {
+      className: "hint"
+    }, React.createElement("p", null, "Hover for more info"), React.createElement("a", {
+      href: user.html_url,
+      className: `link link-${itemNo}`,
+      target: "_blank"
+    }, React.createElement("button", null, "link to github"))), React.createElement("div", {
+      className: "short-info"
+    }, React.createElement("p", null, "Score: ", user.score)), React.createElement("div", {
+      className: "profile-pic"
+    }, React.createElement("img", {
+      className: `profile-pic-${itemNo}`,
       src: user.avatar_url,
       alt: `${user.login}'s profile picture`
-    }), React.createElement("h2", null, user.login), React.createElement("a", {
-      href: user.url,
-      target: "_blank"
-    }, "See ", user.login, "'s profile on GitHub"));
+    })));
   }
 
   render() {
@@ -114,21 +140,65 @@ class Users extends React.Component {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "mouseMove", (num, e) => {
-      const element = document.querySelectorAll(`.card-${num}`); // console.log(e.target);
-      // console.log(window.innerWidth / 2 - e.clientX);
-
+    _defineProperty(this, "mouseEnter", (num, e) => {
+      const element = document.querySelectorAll(`.card-${num}`);
+      const elementsPic = document.querySelectorAll(`.profile-pic-${num}`);
+      const cards = document.querySelector(`.cards`);
       const t1 = new TimelineMax();
-      t1.to(element, 1, {
-        y: -20
+      const t2 = new TimelineMax();
+      const t3 = new TimelineMax();
+      t1.set(element, {
+        transformPerspective: 400,
+        transformOrigin: 'center center'
+      });
+      t2.to(cards, 0.5, {
+        scale: 0.98
+      });
+      t1.to(element, 0.5, {
+        scale: 1.1,
+        x: 0,
+        y: -20,
+        ease: Back.easeOut.config(1.7)
+      });
+      t3.to(elementsPic, 0.4, {
+        scale: 1.7,
+        transformOrigin: 'center right',
+        ease: Back.easeOut.config(2)
+      });
+    });
+
+    _defineProperty(this, "mouseMove", (num, e) => {
+      const element = document.querySelectorAll(`.card-${num}`);
+      const t1 = new TimelineMax();
+      let rotationValue = (window.innerWidth / 2 - e.screenX) * 0.003;
+      t1.set(element, {
+        transformPerspective: 400,
+        transformOrigin: 'center center'
+      });
+      t1.to(element, 0.5, {
+        rotationY: rotationValue
       });
     });
 
     _defineProperty(this, "mouseLeave", (num, e) => {
       const element = document.querySelectorAll(`.card-${num}`);
+      const cards = document.querySelector(`.cards`);
+      const elementsPic = document.querySelectorAll(`.profile-pic-${num}`);
       const t1 = new TimelineMax();
-      t1.to(element, 1, {
-        y: 0
+      const t2 = new TimelineMax();
+      const t3 = new TimelineMax();
+      t1.to(element, 0.75, {
+        scale: 1,
+        y: 0,
+        x: 0,
+        rotationY: 0,
+        ease: Bounce.easeOut
+      });
+      t2.to(cards, 0.5, {
+        scale: 1
+      });
+      t3.to(elementsPic, 0.4, {
+        scale: 1
       });
     });
   }
@@ -141,7 +211,10 @@ class Users extends React.Component {
       className: `card card-${i}`,
       key: i,
       style: {
-        top: `${i * 200}px`
+        top: `${i * 90}px`
+      },
+      onMouseEnter: e => {
+        this.mouseEnter(i, e);
       },
       onMouseMove: e => {
         this.mouseMove(i, e);
@@ -160,9 +233,11 @@ class Users extends React.Component {
       notFound
     } = this.props;
     if (notFound) return React.createElement("h2", null, "not found");
-    return React.createElement("ul", {
+    return React.createElement("div", {
+      className: "container my-4"
+    }, React.createElement("h2", null, "Results:"), React.createElement("ul", {
       className: "cards"
-    }, this.usersList);
+    }, this.usersList));
   }
 
 }
@@ -238,7 +313,7 @@ class App extends React.Component {
     });
 
     this.state = {
-      name: 'dev',
+      name: '',
       loading: false,
       fetchResults: null,
       fetchedUsers: [],
@@ -268,7 +343,7 @@ class App extends React.Component {
       loading: loading,
       fetchedUsers: fetchedUsers,
       ico: 'assets/search.svg'
-    }), loading && 'Loading', error && React.createElement(Error, null), !error && !loading && React.createElement(Users, {
+    }), loading && React.createElement(Loading, null), error && React.createElement(Error, null), fetchedUsers.length > 0 && !error && !loading && React.createElement(Users, {
       notFound: notFound,
       users: fetchedUsers,
       error: error

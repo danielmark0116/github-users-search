@@ -1,3 +1,13 @@
+class Loading extends React.Component {
+  render() {
+    return (
+      <section className="loader">
+        <p>Loading...</p>
+      </section>
+    );
+  }
+}
+
 class Header extends React.Component {
   static propTypes = {
     pic: PropTypes.string.isRequired
@@ -96,13 +106,45 @@ class User extends React.Component {
 
   get userItem() {
     const { user, itemNo } = this.props;
+
     return (
-      <div>
-        <img src={user.avatar_url} alt={`${user.login}'s profile picture`} />
-        <h2>{user.login}</h2>
-        <a href={user.url} target="_blank">
-          See {user.login}'s profile on GitHub
-        </a>
+      <div className="card-content">
+        <div className="ico">
+          <img
+            src={
+              itemNo % 2 === 0
+                ? 'assets/person-blue.svg'
+                : 'assets/person-white.svg'
+            }
+            alt=""
+          />
+        </div>
+        <div className="name">
+          <p>{user.login}</p>
+        </div>
+        <div className="hint">
+          <p>Hover for more info</p>
+          <a
+            href={user.html_url}
+            className={`link link-${itemNo}`}
+            target="_blank"
+          >
+            <button>link to github</button>
+          </a>
+        </div>
+        <div className="short-info">
+          {/* <a rel="stylesheet" href={user.html_url} target="_blank">
+            Link to repos
+          </a> */}
+          <p>Score: {user.score}</p>
+        </div>
+        <div className="profile-pic">
+          <img
+            className={`profile-pic-${itemNo}`}
+            src={user.avatar_url}
+            alt={`${user.login}'s profile picture`}
+          />
+        </div>
       </div>
     );
   }
@@ -123,20 +165,63 @@ class Users extends React.Component {
     notFound: false
   };
 
+  mouseEnter = (num, e) => {
+    const element = document.querySelectorAll(`.card-${num}`);
+    const elementsPic = document.querySelectorAll(`.profile-pic-${num}`);
+    const cards = document.querySelector(`.cards`);
+    const t1 = new TimelineMax();
+    const t2 = new TimelineMax();
+    const t3 = new TimelineMax();
+
+    t1.set(element, {
+      transformPerspective: 400,
+      transformOrigin: 'center center'
+    });
+
+    t2.to(cards, 0.5, { scale: 0.98 });
+    t1.to(element, 0.5, {
+      scale: 1.1,
+      x: 0,
+      y: -20,
+      ease: Back.easeOut.config(1.7)
+    });
+    t3.to(elementsPic, 0.4, {
+      scale: 1.7,
+      transformOrigin: 'center right',
+      ease: Back.easeOut.config(2)
+    });
+  };
+
   mouseMove = (num, e) => {
     const element = document.querySelectorAll(`.card-${num}`);
-    // console.log(e.target);
-    // console.log(window.innerWidth / 2 - e.clientX);
     const t1 = new TimelineMax();
+    let rotationValue = (window.innerWidth / 2 - e.screenX) * 0.003;
 
-    t1.to(element, 1, { y: -20 });
+    t1.set(element, {
+      transformPerspective: 400,
+      transformOrigin: 'center center'
+    });
+
+    t1.to(element, 0.5, { rotationY: rotationValue });
   };
 
   mouseLeave = (num, e) => {
     const element = document.querySelectorAll(`.card-${num}`);
+    const cards = document.querySelector(`.cards`);
+    const elementsPic = document.querySelectorAll(`.profile-pic-${num}`);
     const t1 = new TimelineMax();
+    const t2 = new TimelineMax();
+    const t3 = new TimelineMax();
 
-    t1.to(element, 1, { y: 0 });
+    t1.to(element, 0.75, {
+      scale: 1,
+      y: 0,
+      x: 0,
+      rotationY: 0,
+      ease: Bounce.easeOut
+    });
+    t2.to(cards, 0.5, { scale: 1 });
+    t3.to(elementsPic, 0.4, { scale: 1 });
   };
 
   get usersList() {
@@ -145,7 +230,10 @@ class Users extends React.Component {
       <li
         className={`card card-${i}`}
         key={i}
-        style={{ top: `${i * 200}px` }}
+        style={{ top: `${i * 90}px` }}
+        onMouseEnter={e => {
+          this.mouseEnter(i, e);
+        }}
         onMouseMove={e => {
           this.mouseMove(i, e);
         }}
@@ -161,7 +249,12 @@ class Users extends React.Component {
   render() {
     const { notFound } = this.props;
     if (notFound) return <h2>not found</h2>;
-    return <ul className="cards">{this.usersList}</ul>;
+    return (
+      <div className="container my-4">
+        <h2>Results:</h2>
+        <ul className="cards">{this.usersList}</ul>
+      </div>
+    );
   }
 }
 
@@ -169,7 +262,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: 'dev',
+      name: '',
       loading: false,
       fetchResults: null,
       fetchedUsers: [],
@@ -255,24 +348,9 @@ class App extends React.Component {
           fetchedUsers={fetchedUsers}
           ico={'assets/search.svg'}
         />
-        {/* <form onSubmit={this.submitForm}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Type in the GitHub user name"
-            value={this.state.name}
-            autoComplete="off"
-            onChange={this.handleInput}
-          />
-          {inputAlert && <small>Type in at least 2 characters or more</small>}
-          {!notFound && !error && !loading && fetchedUsers.length === 0 && (
-            <p>Type in the name and hit enter</p>
-          )}
-        </form> */}
-
-        {loading && 'Loading'}
+        {loading && <Loading />}
         {error && <Error></Error>}
-        {!error && !loading && (
+        {fetchedUsers.length > 0 && !error && !loading && (
           <Users notFound={notFound} users={fetchedUsers} error={error}></Users>
         )}
       </main>

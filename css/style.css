@@ -19,26 +19,138 @@ body {
   display: block;
   width: 100%;
   max-width: 800px; }
+  .container.my-4 {
+    margin-top: 50px;
+    margin-bottom: 50px; }
 
-.cards {
-  margin: 0;
-  padding: 0;
+.loader {
+  margin-top: 50px; }
+  .loader p {
+    text-align: center;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #080d9a; }
+
+ul.cards {
   list-style-type: none;
-  width: 400px;
   margin: 0 auto;
-  position: relative; }
+  width: 100%;
+  position: relative;
+  display: block; }
 
-.cards .card {
+h2 {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  color: #080d9a; }
+
+.card {
   position: absolute;
-  background: yellow;
+  background: #ffffff;
+  padding: 0;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
-  z-index: 10; }
-  .cards .card img {
-    width: 20px; }
-  .cards .card:nth-child(odd) {
-    background: red; }
+  z-index: 10;
+  border-radius: 30px;
+  border: 1px solid #f2efff;
+  box-shadow: 0 8px 6px rgba(27, 19, 62, 0.3);
+  transition: 0.3 ease-in;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  color: #6845ff;
+  text-shadow: 0 0 3px rgba(27, 19, 62, 0.1); }
+  .card:hover {
+    box-shadow: 0 12px 6px rgba(27, 19, 62, 0.3);
+    z-index: 11; }
+  .card:nth-child(even) {
+    background: #6845ff;
+    color: #f2efff;
+    left: 10px; }
+    .card:nth-child(even) .hint .link button {
+      border: none;
+      margin: 0 10px;
+      background: #ffffff !important;
+      color: #6845ff !important; }
+  .card .card-content {
+    margin: 20px 30px 30px;
+    display: flex; }
+    .card .card-content div {
+      margin: 10px; }
+    .card .card-content .ico {
+      flex: 1;
+      margin: 0;
+      max-width: 50px;
+      max-height: 50px;
+      display: flex;
+      align-self: center; }
+      .card .card-content .ico img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain; }
+    .card .card-content .name {
+      flex: 3;
+      display: flex;
+      align-items: center; }
+    .card .card-content .hint {
+      flex: 5;
+      display: flex;
+      align-items: center;
+      opacity: 1;
+      transition: 0.3s ease-out; }
+      .card .card-content .hint p {
+        font-weight: 400;
+        font-size: 12px; }
+      .card .card-content .hint .link button {
+        border: none;
+        margin: 0 10px 0 20px;
+        background: #6845ff;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 25px;
+        box-shadow: 0 2px 6px rgba(27, 19, 62, 0.3);
+        color: #ffffff;
+        font-size: 10px;
+        font-family: "Quicksand", sans-serif;
+        opacity: 0;
+        transition: 0.1s ease-out; }
+        .card .card-content .hint .link button:hover {
+          cursor: pointer; }
+        .card .card-content .hint .link button:active, .card .card-content .hint .link button:focus {
+          outline: none; }
+    .card .card-content .short-info {
+      flex: 2;
+      display: flex;
+      font-size: 12px;
+      align-items: center;
+      justify-content: flex-end; }
+      .card .card-content .short-info a {
+        color: inherit;
+        text-decoration: none;
+        margin: 0 5px;
+        flex: 1; }
+      .card .card-content .short-info p {
+        font-weight: 400;
+        flex: 1; }
+    .card .card-content .profile-pic {
+      flex: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-self: center;
+      align-items: center;
+      max-width: 40px;
+      max-height: 40px; }
+      .card .card-content .profile-pic img {
+        width: 100%;
+        object-fit: contain;
+        border-radius: 50%; }
+  .card:hover .hint .link button {
+    opacity: 1; }
 
 .custom-form {
   width: 100%; }

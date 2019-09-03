@@ -1,8 +1,17 @@
-.cards {
-  margin: 0;
-  padding: 0;
+ul.cards {
   list-style-type: none;
-  width: 400px;
   margin: 0 auto;
+  width: 100%;
   position: relative;
+  display: block;
+}
+
+h2 {
+  font-family: $font-quicksand;
+  font-weight: $font-regular;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  color: $blue;
 }

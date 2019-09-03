@@ -10,4 +10,21 @@ body {
   display: block;
   width: 100%;
   max-width: 800px;
+
+  &.my-4 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+}
+
+.loader {
+  margin-top: 50px;
+
+  p {
+    text-align: center;
+    font-family: $font-quicksand;
+    font-weight: $font-regular;
+    font-size: 18px;
+    color: $blue;
+  }
 }
