@@ -133,9 +133,6 @@ class User extends React.Component {
           </a>
         </div>
         <div className="short-info">
-          {/* <a rel="stylesheet" href={user.html_url} target="_blank">
-            Link to repos
-          </a> */}
           <p>Score: {user.score}</p>
         </div>
         <div className="profile-pic">
