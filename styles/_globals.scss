@@ -1,0 +1,13 @@
+body {
+  box-sizing: border-box;
+  background: $light;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+.container {
+  margin: 0 auto;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+}

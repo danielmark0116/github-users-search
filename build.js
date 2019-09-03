@@ -2,6 +2,77 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+class Header extends React.Component {
+  render() {
+    return React.createElement("section", null, React.createElement("div", {
+      className: "container"
+    }, React.createElement("div", {
+      className: "header"
+    }, React.createElement("div", {
+      className: "logo"
+    }, React.createElement("img", {
+      src: this.props.pic,
+      alt: ""
+    })))));
+  }
+
+}
+
+_defineProperty(Header, "propTypes", {
+  pic: PropTypes.string.isRequired
+});
+
+class SearchBar extends React.Component {
+  render() {
+    const {
+      submitForm,
+      name,
+      handleInput,
+      inputAlert,
+      notFound,
+      error,
+      loading,
+      fetchedUsers,
+      ico
+    } = this.props;
+    return React.createElement("section", null, React.createElement("div", {
+      className: "container"
+    }, React.createElement("form", {
+      onSubmit: submitForm,
+      className: "custom-form"
+    }, React.createElement("div", {
+      className: "input-group"
+    }, React.createElement("div", {
+      className: "input-ico"
+    }, React.createElement("img", {
+      src: ico,
+      alt: ""
+    })), React.createElement("div", {
+      className: "input-field"
+    }, React.createElement("input", {
+      type: "text",
+      name: "name",
+      placeholder: "Type in the GitHub user name",
+      value: name,
+      autoComplete: "off",
+      onChange: handleInput
+    }))), inputAlert && React.createElement("small", null, "Type in at least 2 characters or more"), !notFound && !error && !loading && !inputAlert && fetchedUsers.length === 0 && React.createElement("small", null, "Type in the name and hit enter"))));
+  }
+
+}
+
+_defineProperty(SearchBar, "propTypes", {
+  submitForm: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  handleInput: PropTypes.func.isRequired,
+  inputAlert: PropTypes.bool.isRequired,
+  notFound: PropTypes.bool.isRequired,
+  error: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  fetchedUsers: PropTypes.array.isRequired,
+  ico: PropTypes.string.isRequired
+});
+
 class Error extends React.Component {
   render() {
     return React.createElement("p", null, "Upps, something went wrong here...");
@@ -30,7 +101,7 @@ class User extends React.Component {
 
 }
 
-_defineProperty(User, "propType", {
+_defineProperty(User, "propTypes", {
   user: PropTypes.object.isRequired,
   itemNo: PropTypes.number.isRequired
 });
@@ -185,16 +256,19 @@ class App extends React.Component {
       inputAlert,
       error
     } = this.state;
-    return React.createElement("div", null, React.createElement("form", {
-      onSubmit: this.submitForm
-    }, React.createElement("input", {
-      type: "text",
-      name: "name",
-      placeholder: "Type in the GitHub user name",
-      value: this.state.name,
-      autoComplete: "off",
-      onChange: this.handleInput
-    }), inputAlert && React.createElement("small", null, "Type in at least 2 characters or more"), !notFound && !error && !loading && fetchedUsers.length === 0 && React.createElement("p", null, "Type in the name and hit enter")), loading && 'Loading', error && React.createElement(Error, null), !error && !loading && React.createElement(Users, {
+    return React.createElement("main", null, React.createElement(Header, {
+      pic: 'assets/logo.svg'
+    }), React.createElement(SearchBar, {
+      handleInput: this.handleInput,
+      name: this.state.name,
+      submitForm: this.submitForm,
+      inputAlert: inputAlert,
+      notFound: notFound,
+      error: error,
+      loading: loading,
+      fetchedUsers: fetchedUsers,
+      ico: 'assets/search.svg'
+    }), loading && 'Loading', error && React.createElement(Error, null), !error && !loading && React.createElement(Users, {
       notFound: notFound,
       users: fetchedUsers,
       error: error

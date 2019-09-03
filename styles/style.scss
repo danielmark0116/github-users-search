@@ -1,30 +1,10 @@
-body {
-  box-sizing: border-box;
-  background: transparent;
-}
+// IMPORTS
+@import 'variables';
+@import 'fonts';
+@import 'globals';
 
-.cards {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  width: 300px;
-  margin: 0 auto;
-  position: relative;
-
-  .card {
-    position: absolute;
-    background: yellow;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-
-    img {
-      width: 20px;
-    }
-
-    &:nth-child(odd) {
-      background: red;
-    }
-  }
-}
+// COMPONENTS
+@import 'components/cards';
+@import 'components/card';
+@import 'components/form';
+@import 'components/header';

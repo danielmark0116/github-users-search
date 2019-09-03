@@ -1,0 +1,16 @@
+.cards .card {
+  position: absolute;
+  background: yellow;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+
+  img {
+    width: 20px;
+  }
+
+  &:nth-child(odd) {
+    background: red;
+  }
+}

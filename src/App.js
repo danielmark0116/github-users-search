@@ -1,3 +1,83 @@
+class Header extends React.Component {
+  static propTypes = {
+    pic: PropTypes.string.isRequired
+  };
+
+  render() {
+    return (
+      <section>
+        <div className="container">
+          <div className="header">
+            <div className="logo">
+              <img src={this.props.pic} alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+}
+
+class SearchBar extends React.Component {
+  static propTypes = {
+    submitForm: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired,
+    handleInput: PropTypes.func.isRequired,
+    inputAlert: PropTypes.bool.isRequired,
+    notFound: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    fetchedUsers: PropTypes.array.isRequired,
+    ico: PropTypes.string.isRequired
+  };
+
+  render() {
+    const {
+      submitForm,
+      name,
+      handleInput,
+      inputAlert,
+      notFound,
+      error,
+      loading,
+      fetchedUsers,
+      ico
+    } = this.props;
+
+    return (
+      <section>
+        <div className="container">
+          <form onSubmit={submitForm} className="custom-form">
+            <div className="input-group">
+              <div className="input-ico">
+                <img src={ico} alt="" />
+              </div>
+              <div className="input-field">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Type in the GitHub user name"
+                  value={name}
+                  autoComplete="off"
+                  onChange={handleInput}
+                />
+              </div>
+            </div>
+            {inputAlert && <small>Type in at least 2 characters or more</small>}
+            {!notFound &&
+              !error &&
+              !loading &&
+              !inputAlert &&
+              fetchedUsers.length === 0 && (
+                <small>Type in the name and hit enter</small>
+              )}
+          </form>
+        </div>
+      </section>
+    );
+  }
+}
+
 class Error extends React.Component {
   render() {
     return <p>Upps, something went wrong here...</p>;
@@ -5,7 +85,7 @@ class Error extends React.Component {
 }
 
 class User extends React.Component {
-  static propType = {
+  static propTypes = {
     user: PropTypes.object.isRequired,
     itemNo: PropTypes.number.isRequired
   };
@@ -162,8 +242,20 @@ class App extends React.Component {
     const { fetchedUsers, notFound, loading, inputAlert, error } = this.state;
 
     return (
-      <div>
-        <form onSubmit={this.submitForm}>
+      <main>
+        <Header pic={'assets/logo.svg'}></Header>
+        <SearchBar
+          handleInput={this.handleInput}
+          name={this.state.name}
+          submitForm={this.submitForm}
+          inputAlert={inputAlert}
+          notFound={notFound}
+          error={error}
+          loading={loading}
+          fetchedUsers={fetchedUsers}
+          ico={'assets/search.svg'}
+        />
+        {/* <form onSubmit={this.submitForm}>
           <input
             type="text"
             name="name"
@@ -176,14 +268,14 @@ class App extends React.Component {
           {!notFound && !error && !loading && fetchedUsers.length === 0 && (
             <p>Type in the name and hit enter</p>
           )}
-        </form>
+        </form> */}
 
         {loading && 'Loading'}
         {error && <Error></Error>}
         {!error && !loading && (
           <Users notFound={notFound} users={fetchedUsers} error={error}></Users>
         )}
-      </div>
+      </main>
     );
   }
 }
